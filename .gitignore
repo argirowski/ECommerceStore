@@ -1,0 +1,18 @@
+# Backend
+API/bin/
+API/obj/
+
+# Frontend
+client/node_modules/
+client/build/
+client/.env
+
+# ECommerceStore Folder
+.vs/
+
+# General
+*.user
+*.suo
+*.cache
+*.log
+.DS_Store
