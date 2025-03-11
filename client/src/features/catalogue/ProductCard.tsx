@@ -9,12 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAddBasketItemMutation } from "../basket/basketApi";
+import { currencyFormatter } from "../lib/utils";
 
 type ProductCardProps = {
   product: Product;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const [addItemToBasket, { isLoading }] = useAddBasketItemMutation();
   return (
     <Fragment>
       <Card
@@ -41,11 +44,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.name}
           </Typography>
           <Typography variant="h6" color="secondary.main">
-            $ {(product.price / 100).toFixed(2)}
+            {currencyFormatter(product.price)}
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          <Button>Add to cart</Button>
+          <Button
+            disabled={isLoading}
+            onClick={() => addItemToBasket({ product: product, quantity: 1 })}
+          >
+            Add to cart
+          </Button>
           <Button component={Link} to={`/products/${product.id}`}>
             View Details
           </Button>

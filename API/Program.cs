@@ -19,7 +19,7 @@ var app = builder.Build();
 
 //Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionsMiddleWare>();
-app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000"));
 
 app.MapControllers();
 

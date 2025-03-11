@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useFetchProductDetailsQuery } from "./catalogueApi";
+import { currencyFormatter } from "../lib/utils";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
@@ -46,7 +47,7 @@ const ProductDetails: React.FC = () => {
           <Typography variant="h3">{product.name}</Typography>
           <Divider sx={{ mb: 2 }} />
           <Typography variant="h4" color="secondary">
-            ${(product.price / 100).toFixed(2)}
+            {currencyFormatter(product.price)}
           </Typography>
           <TableContainer>
             <Table sx={{ "&:td": { fontSize: "1rem" } }}>
