@@ -1,15 +1,10 @@
 import React, { Fragment } from "react";
-import { useFetchFiltersQuery } from "./catalogueApi";
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Paper,
-  Radio,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
+import SearchFilter from "./SearchFilter";
+import RadioButtonGroup from "../../app/shared/components/RadioButtonGroup";
+import { useAppDispatch, useAppSelector } from "../../app/store/store";
+import { resetParams, setBrands, setOrderBy, setTypes } from "./catalogueSlice";
+import CheckBoxButtons from "../../app/shared/components/CheckBoxButtons";
 
 const sortOptions = [
   { value: "name ", label: "Name: Alphabetical" },
@@ -17,64 +12,42 @@ const sortOptions = [
   { value: "price", label: "Price: Low to Hight" },
 ];
 
-const Filters: React.FC = () => {
-  const { data } = useFetchFiltersQuery();
+type FiltersProps = {
+  filtersData: { brands: string[]; types: string[] };
+};
+
+const Filters: React.FC<FiltersProps> = ({ filtersData }) => {
+  const { orderBy, types, brands } = useAppSelector((state) => state.catalogue);
+  const dispatch = useAppDispatch();
+
   return (
     <Fragment>
       <Box display="flex" flexDirection="column" gap={3}>
         <Paper>
-          <TextField
-            label="Search Products"
-            variant="outlined"
-            fullWidth
-          ></TextField>
+          <SearchFilter />
         </Paper>
         <Paper sx={{ p: 3 }}>
-          <FormControl>
-            {sortOptions.map(({ value, label }) => (
-              <FormControlLabel
-                key={label}
-                control={<Radio sx={{ py: 0.7 }} />}
-                label={label}
-                value={value}
-              />
-            ))}
-          </FormControl>
+          <RadioButtonGroup
+            selectedValue={orderBy}
+            options={sortOptions}
+            onChange={(e) => dispatch(setOrderBy(e.target.value))}
+          />
         </Paper>
         <Paper sx={{ p: 3 }}>
-          <FormGroup>
-            {data &&
-              data.brands.map((item) => (
-                <FormControlLabel
-                  key={item}
-                  control={
-                    <Checkbox
-                      color="secondary"
-                      sx={{ py: 0.7, fontSize: 40 }}
-                    />
-                  }
-                  label={item}
-                />
-              ))}
-          </FormGroup>
+          <CheckBoxButtons
+            items={filtersData.brands}
+            checked={brands}
+            onChange={(items: string[]) => dispatch(setBrands(items))}
+          />
         </Paper>
         <Paper sx={{ p: 3 }}>
-          <FormGroup>
-            {data &&
-              data.types.map((item) => (
-                <FormControlLabel
-                  key={item}
-                  control={
-                    <Checkbox
-                      color="secondary"
-                      sx={{ py: 0.7, fontSize: 40 }}
-                    />
-                  }
-                  label={item}
-                />
-              ))}
-          </FormGroup>
+          <CheckBoxButtons
+            items={filtersData.types}
+            checked={types}
+            onChange={(items: string[]) => dispatch(setTypes(items))}
+          />
         </Paper>
+        <Button onClick={() => dispatch(resetParams())}>Reset Filters</Button>
       </Box>
     </Fragment>
   );

@@ -6,7 +6,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import NavBar from "./NavBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { toggleDarkMode } from "./uiSlice";
 
@@ -24,6 +24,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ScrollRestoration />
       <CssBaseline />
       <NavBar
         darkMode={darkMode}
