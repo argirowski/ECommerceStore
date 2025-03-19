@@ -6,12 +6,14 @@ import { useDispatch } from "react-redux";
 import { errorApi } from "../../features/about/ErrorApi";
 import { basketApi } from "../../features/basket/basketApi";
 import { catalogueSlice } from "../../features/catalogue/catalogueSlice";
+import { accountApi } from "../../features/account/accountApi";
 
 export const store = configureStore({
   reducer: {
     [catalogueApi.reducerPath]: catalogueApi.reducer,
     [errorApi.reducerPath]: errorApi.reducer,
     [basketApi.reducerPath]: basketApi.reducer,
+    [accountApi.reducerPath]: accountApi.reducer,
     ui: uiSlice.reducer,
     catalogue: catalogueSlice.reducer,
   },
@@ -19,7 +21,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       catalogueApi.middleware,
       errorApi.middleware,
-      basketApi.middleware
+      basketApi.middleware,
+      accountApi.middleware
     ),
 });
 
