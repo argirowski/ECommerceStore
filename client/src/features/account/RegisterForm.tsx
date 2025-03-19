@@ -1,44 +1,53 @@
-import { LockOutlined } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
 import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "./accountApi";
+import { registerSchema, RegisterSchema } from "../lib/schemas/registerSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginSchema } from "../lib/schemas/loginSchema";
-import { useLazyUserInfoQuery, useLoginMutation } from "./accountApi";
+import { LockOutlined } from "@mui/icons-material";
+import {
+  Container,
+  Paper,
+  Box,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 
-const LoginForm: React.FC = () => {
-  const [login, { isLoading }] = useLoginMutation();
-  const [fetchUserInfo] = useLazyUserInfoQuery();
-
+const RegisterForm: React.FC = () => {
+  const [registerUser] = useRegisterMutation();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginSchema>({
+    setError,
+    formState: { errors, isValid, isLoading },
+  } = useForm<RegisterSchema>({
     mode: "onTouched",
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
 
-  const navigate = useNavigate();
-
-  const location = useLocation();
-
-  const onSubmit = async (data: LoginSchema) => {
-    await login(data);
-    await fetchUserInfo();
-    navigate(location.state?.from || "/products");
+  const onSubmit = async (data: RegisterSchema) => {
+    try {
+      await registerUser(data).unwrap();
+    } catch (error) {
+      console.error("Failed to register", error);
+      const apiError = error as { message: string };
+      if (apiError.message && typeof apiError.message === "string") {
+        const errorArray = apiError.message.split(",");
+        errorArray.forEach((е) => {
+          if (е.includes("Password")) {
+            setError("password", { message: е });
+          } else if (е.includes("Email")) {
+            setError("email", { message: е });
+          }
+        });
+      }
+    }
   };
 
   return (
     <Fragment>
+      {" "}
       <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>
         <Box
           display="flex"
@@ -47,7 +56,7 @@ const LoginForm: React.FC = () => {
           marginTop="8"
         >
           <LockOutlined sx={{ mt: 3, color: "secondary.main", fontSize: 40 }} />
-          <Typography variant="h5">Sign In</Typography>
+          <Typography variant="h5">Register</Typography>
           <Box
             component="form"
             onSubmit={handleSubmit(onSubmit)}
@@ -73,18 +82,22 @@ const LoginForm: React.FC = () => {
               error={!!errors.password}
               helperText={errors.password?.message}
             />
-            <Button disabled={isLoading} variant="contained" type="submit">
-              Sign In
+            <Button
+              disabled={isLoading || !isValid}
+              variant="contained"
+              type="submit"
+            >
+              Register
             </Button>
             <Typography sx={{ textAlign: "center" }}>
-              Don't have an account?
+              Already Have an Account
               <Typography
                 sx={{ marginLeft: 2 }}
                 component={Link}
-                to="/register"
+                to="/login"
                 color="primary"
               >
-                Sign Up
+                Sign In
               </Typography>
             </Typography>
           </Box>
@@ -94,4 +107,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
