@@ -1,11 +1,12 @@
 # Backend
 API/bin/
 API/obj/
+API/appsettings.Development.json
 
 # Frontend
-client/node_modules/
-client/build/
-client/.env
+ecommerce-ui/node_modules/
+ecommerce-ui/build/
+ecommerce-ui/.env
 
 # ECommerceStore Folder
 .vs/

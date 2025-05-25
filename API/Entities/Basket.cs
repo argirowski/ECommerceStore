@@ -6,7 +6,9 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public required string BasketId { get; set; }
-        public List<BasketItem> Items { get; set; } = new List<BasketItem>();
+        public List<BasketItem> Items { get; set; } = [];
+        public string? ClientSecret { get; set; }
+        public string? PaymentIntentId { get; set; }
 
         public void AddItem(Product product, int quantity)
         {
@@ -30,13 +32,13 @@ namespace API.Entities
             }
         }
 
-        public void RemoveItem(int id, int quantity)
+        public void RemoveItem(int productId, int quantity)
         {
             if (quantity <= 0)
             {
                 throw new ArgumentException("Quantity must be greater than 0", nameof(quantity));
             }
-            var existingItem = FindItem(id);
+            var existingItem = FindItem(productId);
             if (existingItem == null)
             {
                 return;

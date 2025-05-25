@@ -1,0 +1,36 @@
+🎯 Project Overview: E-Commerce Store Application with .NET, React, and Redux
+
+📌 Goal:
+Develop a fully functional proof-of-concept E-Commerce Store from scratch using modern frameworks and tools:
+.NET 9, React 19 with Redux for state management, and Material UI for styling. The project incorporates essential
+features like authentication, state management, and secure payment integration.
+
+📌 Core Features
+✅ Backend Development:
+🔹 Build a Web API using .NET 9 with clean, maintainable code.
+🔹 Utilize Entity Framework Core for database interactions.
+🔹 Implement ASP.NET Core Identity for secure user authentication.
+🔹 Optimize code using Automapper for object mapping.
+
+✅ Frontend Development:
+🔹 Design a React single-page application for the user interface.
+🔹 Leverage Redux to manage client-side state.
+🔹 Style components with Material UI to create a responsive and visually appealing UI.
+
+✅ Enhanced Functionality:
+🔹 Implement reusable forms using React Hook Form for validation.
+🔹 Add features like Paging, Sorting, Searching, and Filtering to enhance the user experience.
+🔹 Manage shopping carts and streamline order creation workflows
+🔹 Secure payment handling through 3D-secure payments with Stripe (EU standards compliant).
+
+✅ Deployment:
+🔹 Publish the application to Azure for public accessibility.
+
+📌 Learning Journey
+✔ Begin by setting up a developer environment.
+✔ Gradually construct the backend and frontend layers:
+🔹 Create a .NET Web API using the dotnet CLI.
+🔹 Develop the client application using create-react-app.
+🔹 Configure React Router 7 for client-side navigation.
+✔ Iteratively add functionalities, such as authentication, secure payment handling,
+	and dynamic filtering, for a complete E-Commerce experience

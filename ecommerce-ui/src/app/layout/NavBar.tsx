@@ -53,11 +53,10 @@ const NavBar: React.FC<NavBarProps> = ({ darkMode, toggleDarkMode }) => {
   const { data: basketData } = useFetchBasketQuery();
 
   const basketCount =
-    basketData?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    basketData?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   return (
     <Fragment>
-      {" "}
       <AppBar position="fixed">
         <Toolbar
           sx={{

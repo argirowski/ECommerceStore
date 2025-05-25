@@ -60,17 +60,17 @@ export const basketApi = createApi({
       ) => {
         var patchResults = dispatch(
           basketApi.util.updateQueryData("fetchBasket", undefined, (draft) => {
-            if (draft) {
-              const itemIndex = draft.items.findIndex(
-                (x) => x.productId === productId
-              );
-              if (itemIndex >= 0) {
-                draft.items[itemIndex].quantity -= quantity;
-                if (draft.items[itemIndex].quantity <= 0) {
-                  draft.items.splice(itemIndex, 1);
-                }
+            // if (draft) {
+            const itemIndex = draft.items.findIndex(
+              (item) => item.productId === productId
+            );
+            if (itemIndex >= 0) {
+              draft.items[itemIndex].quantity -= quantity;
+              if (draft.items[itemIndex].quantity <= 0) {
+                draft.items.splice(itemIndex, 1);
               }
             }
+            // }
           })
         );
         try {

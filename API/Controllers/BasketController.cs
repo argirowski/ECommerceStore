@@ -3,7 +3,6 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -12,7 +11,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<BasketDTO>> GetBasket()
         {
-            var basket = await RetrieveBasket();
+            var basketId = Request.Cookies["basketId"];
+            var basket = await context.Baskets.GetBasketWithItems(basketId);
 
             if (basket == null)
             {
@@ -25,7 +25,8 @@ namespace API.Controllers
         public async Task<ActionResult<BasketDTO>> AddItemToBasket(int productId, int quantity)
         {
             // First get the basket
-            var basket = await RetrieveBasket();
+            var basketId = Request.Cookies["basketId"];
+            var basket = await context.Baskets.GetBasketWithItems(basketId);
             // If the basket does not exist, create a new basket
             basket ??= CreateBasket();
             // Get a product by id
@@ -51,18 +52,19 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Basket>> RemoveItemFromBasket(int id, int quantity)
+        public async Task<ActionResult<BasketDTO>> RemoveBasketItem(int productId, int quantity)
         {
             // First get the basket
-            var basket = await RetrieveBasket();
+            var basketId = Request.Cookies["basketId"];
+            var basket = await context.Baskets.GetBasketWithItems(basketId);
 
             if (basket == null)
             {
-                return NotFound("Basket not found");
+                return BadRequest("Unable to Retrieve Basket");
             }
 
             // Remove the item from the basket
-            basket.RemoveItem(id, quantity);
+            basket.RemoveItem(productId, quantity);
 
             // Save the changes
             var result = await context.SaveChangesAsync();
@@ -75,11 +77,6 @@ namespace API.Controllers
             {
                 return BadRequest("Problem removing item from basket");
             }
-        }
-
-        private async Task<Basket?> RetrieveBasket()
-        {
-            return await context.Baskets.Include(x => x.Items).ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.BasketId == Request.Cookies["basketId"]);
         }
 
         private Basket CreateBasket()

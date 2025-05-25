@@ -78,6 +78,7 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
             })
           }
           color="error"
+          size="small"
           sx={{
             border: 1,
             borderRadius: 1,
@@ -86,7 +87,6 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
             marginRight: 1,
             marginTop: 1,
           }}
-          size="small"
         >
           <Close />
         </IconButton>

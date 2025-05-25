@@ -1,6 +1,7 @@
 using API.Data;
 using API.Entities;
 using API.Middleware;
+using API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 
 builder.Services.AddCors();
 builder.Services.AddTransient<ExceptionsMiddleWare>();
+builder.Services.AddScoped<PaymentsService>();
 builder.Services.AddIdentityApiEndpoints<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
@@ -35,6 +37,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>(); // api/login, api/register, api/user
 
-DbInitializer.InitDb(app);
+await DbInitializer.InitDb(app);
 
 app.Run();

@@ -6,9 +6,6 @@ export type Basket = {
 };
 
 export class BasketItem {
-  /**
-   *
-   */
   constructor(product: Product, quantity: number) {
     this.productId = product.id;
     this.name = product.name;
