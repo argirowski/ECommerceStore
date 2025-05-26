@@ -1,9 +1,10 @@
+import { Typography } from "@mui/material";
 import { Fragment } from "react/jsx-runtime";
 
 const CheckoutPage: React.FC = () => {
   return (
     <Fragment>
-      <h1>Checkout Page</h1>
+      <Typography variant="h3">Only authorized users can checkout</Typography>
     </Fragment>
   );
 };

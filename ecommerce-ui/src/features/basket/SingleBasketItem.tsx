@@ -2,7 +2,10 @@ import React, { Fragment } from "react";
 import { Box, Grid2, IconButton, Paper, Typography } from "@mui/material";
 import { BasketItem } from "../../app/models/basket";
 import { Add, Close, Remove } from "@mui/icons-material";
-import { useRemoveBasketItemMutation } from "./basketApi";
+import {
+  useAddBasketItemMutation,
+  useRemoveBasketItemMutation,
+} from "./basketApi";
 import { currencyFormatter } from "../lib/utils";
 
 type BasketItemProps = {
@@ -11,6 +14,7 @@ type BasketItemProps = {
 
 const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
   const [removeBasketItem] = useRemoveBasketItemMutation();
+  const [addBasketItem] = useAddBasketItemMutation();
 
   return (
     <Fragment>
@@ -45,7 +49,7 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
                 {currencyFormatter(item.price)} x {item.quantity}
               </Typography>
               <Typography sx={{ fontSize: "1.1rem" }}>
-                $ {((item.price / 100) * item.quantity).toFixed(2)}
+                {currencyFormatter(item.price * item.quantity)}
               </Typography>
             </Box>
             <Grid2 container spacing={1} alignItems="center">
@@ -61,6 +65,12 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
               </IconButton>
               <Typography variant="h6">{item.quantity}</Typography>
               <IconButton
+                onClick={() =>
+                  addBasketItem({
+                    product: item,
+                    quantity: 1,
+                  })
+                }
                 color="success"
                 size="small"
                 sx={{ border: 1, borderRadius: 1, minWidth: 0 }}

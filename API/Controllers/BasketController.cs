@@ -3,6 +3,7 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -52,31 +53,19 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<BasketDTO>> RemoveBasketItem(int productId, int quantity)
+        public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
         {
-            // First get the basket
-            var basketId = Request.Cookies["basketId"];
-            var basket = await context.Baskets.GetBasketWithItems(basketId);
+            var basket = await RetrieveBasket();
 
-            if (basket == null)
-            {
-                return BadRequest("Unable to Retrieve Basket");
-            }
+            if (basket == null) return BadRequest("Unable to retrieve basket");
 
-            // Remove the item from the basket
             basket.RemoveItem(productId, quantity);
 
-            // Save the changes
-            var result = await context.SaveChangesAsync();
+            var result = await context.SaveChangesAsync() > 0;
 
-            if (result > 0)
-            {
-                return Ok(basket);
-            }
-            else
-            {
-                return BadRequest("Problem removing item from basket");
-            }
+            if (result) return Ok();
+
+            return BadRequest("Problem updating basket");
         }
 
         private Basket CreateBasket()
@@ -92,6 +81,14 @@ namespace API.Controllers
             var basket = new Basket { BasketId = basketId };
             context.Baskets.Add(basket);
             return basket;
+        }
+
+        private async Task<Basket?> RetrieveBasket()
+        {
+            return await context.Baskets
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.BasketId == Request.Cookies["basketId"]);
         }
     }
 }

@@ -3,6 +3,11 @@ import { Basket, BasketItem } from "../../app/models/basket";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
 import { Product } from "../../app/models/product";
 
+// Type guard to check if a product is a BasketItem.
+// Type guards help TypeScript understand the type of a variable at runtime.
+const isBasketItem = (product: Product | BasketItem): product is BasketItem =>
+  (product as BasketItem).quantity !== undefined;
+
 export const basketApi = createApi({
   reducerPath: "basketApi",
   baseQuery: baseQueryWithErrorHandling,
@@ -14,32 +19,49 @@ export const basketApi = createApi({
     }),
     addBasketItem: builder.mutation<
       Basket,
-      { product: Product; quantity: number }
+      { product: Product | BasketItem; quantity: number }
     >({
-      query: ({ product, quantity }) => ({
-        url: `basket?productId=${product.id}&quantity=${quantity}`,
-        method: "POST",
-      }),
+      query: ({ product, quantity }) => {
+        const productId = isBasketItem(product)
+          ? product.productId
+          : product.id;
+        return {
+          url: `basket?productId=${productId}&quantity=${quantity}`,
+          method: "POST",
+        };
+      },
       onQueryStarted: async (
         { product, quantity },
         { dispatch, queryFulfilled }
       ) => {
+        let isNewBasket = false;
         const patchResult = dispatch(
           basketApi.util.updateQueryData("fetchBasket", undefined, (draft) => {
-            if (draft) {
+            const productId = isBasketItem(product)
+              ? product.productId
+              : product.id;
+
+            if (!draft?.basketId) isNewBasket = true;
+
+            if (!isNewBasket) {
               const existingItem = draft.items.find(
-                (x) => x.productId === product.id
+                (item) => item.productId === productId
               );
-              if (existingItem) {
-                existingItem.quantity += quantity;
-              } else {
-                draft.items.push(new BasketItem(product, quantity));
-              }
+              if (existingItem) existingItem.quantity += quantity;
+              else
+                draft.items.push(
+                  isBasketItem(product)
+                    ? product
+                    : { ...product, productId: product.id, quantity }
+                );
             }
           })
         );
+
         try {
           await queryFulfilled;
+
+          if (isNewBasket) dispatch(basketApi.util.invalidateTags(["Basket"]));
         } catch (error) {
           console.log(error);
           patchResult.undo();
@@ -58,9 +80,8 @@ export const basketApi = createApi({
         { productId, quantity },
         { dispatch, queryFulfilled }
       ) => {
-        var patchResults = dispatch(
+        const patchResult = dispatch(
           basketApi.util.updateQueryData("fetchBasket", undefined, (draft) => {
-            // if (draft) {
             const itemIndex = draft.items.findIndex(
               (item) => item.productId === productId
             );
@@ -70,14 +91,14 @@ export const basketApi = createApi({
                 draft.items.splice(itemIndex, 1);
               }
             }
-            // }
           })
         );
+
         try {
           await queryFulfilled;
         } catch (error) {
           console.log(error);
-          patchResults.undo();
+          patchResult.undo();
         }
       },
     }),

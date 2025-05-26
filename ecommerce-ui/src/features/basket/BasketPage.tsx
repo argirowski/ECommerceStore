@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { useFetchBasketQuery } from "./basketApi";
 import { Grid2, Typography } from "@mui/material";
 import SingleBasketItem from "./SingleBasketItem";
+import OrderSummary from "../../app/shared/components/OrderSummary";
 
 const BasketPage: React.FC = () => {
   const { data, isLoading } = useFetchBasketQuery();
@@ -10,7 +11,7 @@ const BasketPage: React.FC = () => {
     return <Typography>Loading...</Typography>;
   }
 
-  if (!data) {
+  if (!data || data.items.length === 0) {
     return <Typography variant="h3">Your Basket is Empty</Typography>;
   }
 
@@ -21,6 +22,9 @@ const BasketPage: React.FC = () => {
           {data.items.map((item) => (
             <SingleBasketItem item={item} key={item.productId} />
           ))}
+        </Grid2>
+        <Grid2 size={4}>
+          <OrderSummary />
         </Grid2>
       </Grid2>
     </Fragment>
