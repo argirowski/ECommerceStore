@@ -12,6 +12,9 @@ import LoginForm from "../../features/account/LoginForm";
 import RegisterForm from "../../features/account/RegisterForm";
 import RequireAuth from "./RequireAuth";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
+import CheckoutSuccess from "../../features/checkout/CheckoutSuccess";
+import OrdersPage from "../../features/orders/OrdersPage";
+import OrdersDetailedPage from "../../features/orders/OrdersDetailedPage";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +23,12 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <RequireAuth />,
-        children: [{ path: "checkout", element: <CheckoutPage /> }],
+        children: [
+          { path: "checkout", element: <CheckoutPage /> },
+          { path: "checkout/success", element: <CheckoutSuccess /> },
+          { path: "orders", element: <OrdersPage /> },
+          { path: "orders/:id", element: <OrdersDetailedPage /> },
+        ],
       },
       { path: "", element: <HomePage /> },
       { path: "products", element: <Catalogue /> },
@@ -28,7 +36,6 @@ export const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "basket", element: <BasketPage /> },
-      { path: "checkout", element: <CheckoutPage /> },
       { path: "server-error", element: <ServerError /> },
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },

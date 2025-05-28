@@ -1,3 +1,5 @@
+import { PaymentSummary, ShippingAddress } from "../../app/models/oder";
+
 export const currencyFormatter = (amount: number) => {
   return "$" + (amount / 100).toFixed(2);
 };

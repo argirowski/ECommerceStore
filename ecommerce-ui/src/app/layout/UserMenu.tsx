@@ -6,6 +6,7 @@ import { User } from "../models/user";
 import { Divider, ListItemIcon, ListItemText } from "@mui/material";
 import { History, LogoutOutlined, Person } from "@mui/icons-material";
 import { useLogoutMutation } from "../../features/account/accountApi";
+import { Link } from "react-router-dom";
 
 type UserMenuProps = {
   user: User;
@@ -44,7 +45,7 @@ export default function FadeMenu({ user }: UserMenuProps) {
           </ListItemIcon>
           <ListItemText>My Profile</ListItemText>
         </MenuItem>
-        <MenuItem>
+        <MenuItem component={Link} to="/orders">
           <ListItemIcon>
             <History />
           </ListItemIcon>
