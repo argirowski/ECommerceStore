@@ -49,20 +49,29 @@ namespace API.Controllers
 
             var deliveryFee = CalculateDeliveryFee(subTotal);
 
-            var order = new Order
-            {
-                OrderItems = items,
-                BuyerEmail = User.GetUserName(),
-                ShippingAddress = createOrderDTO.ShippingAddress,
-                DeliveryFee = deliveryFee,
-                Subtotal = subTotal,
-                PaymentSummary = createOrderDTO.PaymentSummary,
-                PaymentIntentId = basket.PaymentIntentId,
-            };
+            var order = await storeContext.Orders
+                .Include(x => x.OrderItems)
+                .FirstOrDefaultAsync(x => x.PaymentIntentId == basket.PaymentIntentId);
 
-            storeContext.Orders.Add(order);
-            storeContext.Baskets.Remove(basket);
-            Response.Cookies.Delete("basketId");
+            if (order == null)
+            {
+                order = new Order
+                {
+                    OrderItems = items,
+                    BuyerEmail = User.GetUserName(),
+                    ShippingAddress = createOrderDTO.ShippingAddress,
+                    DeliveryFee = deliveryFee,
+                    Subtotal = subTotal,
+                    PaymentSummary = createOrderDTO.PaymentSummary,
+                    PaymentIntentId = basket.PaymentIntentId,
+                };
+
+                storeContext.Orders.Add(order);
+            }
+            else
+            {
+                order.OrderItems = items;
+            }
 
             var result = await storeContext.SaveChangesAsync() > 0;
 
