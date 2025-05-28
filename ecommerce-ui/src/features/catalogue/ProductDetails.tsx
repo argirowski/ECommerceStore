@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import {
   Button,
   Divider,
-  Grid2,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { useFetchProductDetailsQuery } from "./catalogueApi";
 import { currencyFormatter } from "../lib/utils";
 import {
@@ -65,15 +65,15 @@ const ProductDetails: React.FC = () => {
 
   return (
     <Fragment>
-      <Grid2 container spacing={6} maxWidth="lg" sx={{ mx: "auto" }}>
-        <Grid2 size={6}>
+      <Grid container spacing={6} maxWidth="lg" sx={{ mx: "auto" }}>
+        <Grid size={6}>
           <img
             src={product?.pictureUrl}
             alt={product.name}
             style={{ width: "100%" }}
           />
-        </Grid2>
-        <Grid2 size={6}>
+        </Grid>
+        <Grid size={6}>
           <Typography variant="h3">{product.name}</Typography>
           <Divider sx={{ mb: 2 }} />
           <Typography variant="h4" color="secondary">
@@ -93,8 +93,8 @@ const ProductDetails: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Grid2 container spacing={2} marginTop={3}>
-            <Grid2 size={6}>
+          <Grid container spacing={2} marginTop={3}>
+            <Grid size={6}>
               <TextField
                 variant="outlined"
                 type="number"
@@ -103,8 +103,8 @@ const ProductDetails: React.FC = () => {
                 value={quantity}
                 onChange={handleInputChange}
               />
-            </Grid2>
-            <Grid2 size={6}>
+            </Grid>
+            <Grid size={6}>
               <Button
                 onClick={handleUpdateBasket}
                 disabled={
@@ -119,10 +119,10 @@ const ProductDetails: React.FC = () => {
                 {}
                 {item ? "Update Basket" : "Add to Basket"}
               </Button>
-            </Grid2>
-          </Grid2>
-        </Grid2>
-      </Grid2>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

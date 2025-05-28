@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
-import { Box, Grid2, IconButton, Paper, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { BasketItem } from "../../app/models/basket";
 import { Add, Close, Remove } from "@mui/icons-material";
 import {
@@ -52,7 +53,7 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
                 {currencyFormatter(item.price * item.quantity)}
               </Typography>
             </Box>
-            <Grid2 container spacing={1} alignItems="center">
+            <Grid container spacing={1} alignItems="center">
               <IconButton
                 onClick={() =>
                   removeBasketItem({ productId: item.productId, quantity: 1 })
@@ -77,7 +78,7 @@ const SingleBasketItem: React.FC<BasketItemProps> = ({ item }) => {
               >
                 <Add />
               </IconButton>
-            </Grid2>
+            </Grid>
           </Box>
         </Box>
         <IconButton

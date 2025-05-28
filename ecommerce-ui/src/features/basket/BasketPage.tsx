@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { useFetchBasketQuery } from "./basketApi";
-import { Grid2, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import SingleBasketItem from "./SingleBasketItem";
 import OrderSummary from "../../app/shared/components/OrderSummary";
 
@@ -17,16 +18,16 @@ const BasketPage: React.FC = () => {
 
   return (
     <Fragment>
-      <Grid2 container spacing={2}>
-        <Grid2 size={8}>
+      <Grid container spacing={2}>
+        <Grid size={8}>
           {data.items.map((item) => (
             <SingleBasketItem item={item} key={item.productId} />
           ))}
-        </Grid2>
-        <Grid2 size={4}>
+        </Grid>
+        <Grid size={4}>
           <OrderSummary />
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

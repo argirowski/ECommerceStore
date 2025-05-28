@@ -1,10 +1,9 @@
 import { SearchOff } from "@mui/icons-material";
-import { Button, Divider, Paper, Typography } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import React, { Fragment } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const NotFound: React.FC = () => {
-  const { state } = useLocation();
   return (
     <Fragment>
       <Paper

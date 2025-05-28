@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import ProductList from "./ProductList";
 import { useFetchFiltersQuery, useFetchProductsQuery } from "./catalogueApi";
-import { Grid2, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import Filters from "./Filters";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import CataloguePagination from "../../app/shared/components/CataloguePagination";
@@ -18,11 +19,11 @@ const Catalogue: React.FC = () => {
     return <Typography>Loading...</Typography>;
   return (
     <Fragment>
-      <Grid2 container spacing={4}>
-        <Grid2 size={3}>
+      <Grid container spacing={4}>
+        <Grid size={3}>
           <Filters filtersData={filtersData} />
-        </Grid2>
-        <Grid2 size={9}>
+        </Grid>
+        <Grid size={9}>
           {data.items && data.items.length > 0 ? (
             <>
               <ProductList products={data.items} />
@@ -39,8 +40,8 @@ const Catalogue: React.FC = () => {
               No products found for this filter
             </Typography>
           )}
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

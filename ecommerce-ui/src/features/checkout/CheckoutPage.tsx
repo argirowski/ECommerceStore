@@ -1,4 +1,5 @@
-import { Grid2, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { Fragment } from "react/jsx-runtime";
 import OrderSummary from "../../app/shared/components/OrderSummary";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
@@ -35,8 +36,8 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <Fragment>
-      <Grid2 container spacing={2}>
-        <Grid2 size={8}>
+      <Grid container spacing={2}>
+        <Grid size={8}>
           {!stripePromise || !options || isLoading ? (
             <Typography variant="h6">Loading checkout...</Typography>
           ) : (
@@ -44,11 +45,11 @@ const CheckoutPage: React.FC = () => {
               <CheckoutStepper />
             </Elements>
           )}
-        </Grid2>
-        <Grid2 size={4}>
+        </Grid>
+        <Grid size={4}>
           <OrderSummary />
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };
