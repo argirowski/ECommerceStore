@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { router } from "../routes/Routes";
 
 const customBaseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5001/api",
+  baseUrl: process.env.REACT_APP_API_URL,
   credentials: "include",
 });
 

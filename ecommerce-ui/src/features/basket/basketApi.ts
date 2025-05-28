@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { Basket, BasketItem } from "../../app/models/basket";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
 import { Product } from "../../app/models/product";
+import Cookies from "js-cookie";
 
 // Type guard to check if a product is a BasketItem.
 // Type guards help TypeScript understand the type of a variable at runtime.
@@ -102,6 +103,19 @@ export const basketApi = createApi({
         }
       },
     }),
+    // Clear basket mutation
+    clearBasket: builder.mutation<void, void>({
+      queryFn: () => ({ data: undefined }),
+      onQueryStarted: async (_, { dispatch }) => {
+        dispatch(
+          basketApi.util.updateQueryData("fetchBasket", undefined, (draft) => {
+            draft.items = [];
+            draft.basketId = "";
+          })
+        );
+        Cookies.remove("basketId");
+      },
+    }),
   }),
 });
 
@@ -109,4 +123,5 @@ export const {
   useFetchBasketQuery,
   useAddBasketItemMutation,
   useRemoveBasketItemMutation,
+  useClearBasketMutation,
 } = basketApi;

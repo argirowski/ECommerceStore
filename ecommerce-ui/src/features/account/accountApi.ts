@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
-import { User } from "../../app/models/user";
+import { User, UserAddress } from "../../app/models/user";
 import { LoginSchema } from "../lib/schemas/loginSchema";
 import { router } from "../../app/routes/Routes";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ export const accountApi = createApi({
     login: builder.mutation<void, LoginSchema>({
       query: (creds) => {
         return {
-          url: `login?useCookies=true`,
+          url: "login?useCookies=true",
           method: "POST",
           body: creds,
         };
@@ -23,14 +23,14 @@ export const accountApi = createApi({
           await queryFulfilled;
           dispatch(accountApi.util.invalidateTags(["UserInfo"]));
         } catch (error) {
-          console.error("Failed to login", error);
+          console.log(error);
         }
       },
     }),
     register: builder.mutation<void, object>({
       query: (creds) => {
         return {
-          url: `account/register`,
+          url: "account/register",
           method: "POST",
           body: creds,
         };
@@ -38,10 +38,10 @@ export const accountApi = createApi({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success("Registration Successful. You can now sign in.");
+          toast.success("Registration successful - you can now sign in!");
           router.navigate("/login");
         } catch (error) {
-          console.error("Failed to register", error);
+          console.log(error);
           throw error;
         }
       },
@@ -52,16 +52,42 @@ export const accountApi = createApi({
     }),
     logout: builder.mutation({
       query: () => ({
-        url: `account/logout`,
+        url: "account/logout",
         method: "POST",
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(accountApi.util.invalidateTags(["UserInfo"]));
+        router.navigate("/");
+      },
+    }),
+    fetchAddress: builder.query<UserAddress, void>({
+      query: () => ({
+        url: "account/address",
+      }),
+    }),
+    updateUserAddress: builder.mutation<UserAddress, UserAddress>({
+      query: (address) => ({
+        url: "account/address",
+        method: "POST",
+        body: address,
+      }),
+      onQueryStarted: async (address, { dispatch, queryFulfilled }) => {
+        const patchResult = dispatch(
+          accountApi.util.updateQueryData(
+            "fetchAddress",
+            undefined,
+            (draft) => {
+              Object.assign(draft, { ...address });
+            }
+          )
+        );
+
         try {
           await queryFulfilled;
-          dispatch(accountApi.util.invalidateTags(["UserInfo"]));
-          router.navigate("/");
         } catch (error) {
-          console.error("Failed to logout", error);
+          patchResult.undo();
+          console.log(error);
         }
       },
     }),
@@ -74,4 +100,6 @@ export const {
   useLogoutMutation,
   useUserInfoQuery,
   useLazyUserInfoQuery,
+  useFetchAddressQuery,
+  useUpdateUserAddressMutation,
 } = accountApi;

@@ -3,6 +3,9 @@ import { Product } from "./product";
 export type Basket = {
   basketId: string;
   items: BasketItem[];
+  clientSecret?: string;
+  paymentIntentId?: string;
+  coupon: Coupon | null;
 };
 
 export class BasketItem {
@@ -23,3 +26,11 @@ export class BasketItem {
   type: string;
   quantity: number;
 }
+
+export type Coupon = {
+  name: string;
+  amountOff?: number;
+  percentOff?: number;
+  promotionCode: string;
+  couponId: string;
+};

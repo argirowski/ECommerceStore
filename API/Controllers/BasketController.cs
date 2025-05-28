@@ -13,7 +13,7 @@ namespace API.Controllers
         public async Task<ActionResult<BasketDTO>> GetBasket()
         {
             var basketId = Request.Cookies["basketId"];
-            var basket = await context.Baskets.GetBasketWithItems(basketId);
+            var basket = await RetrieveBasket();
 
             if (basket == null)
             {
@@ -27,7 +27,7 @@ namespace API.Controllers
         {
             // First get the basket
             var basketId = Request.Cookies["basketId"];
-            var basket = await context.Baskets.GetBasketWithItems(basketId);
+            var basket = await RetrieveBasket();
             // If the basket does not exist, create a new basket
             basket ??= CreateBasket();
             // Get a product by id

@@ -10,9 +10,10 @@ import React, { Fragment } from "react";
 import { currencyFormatter } from "../../../features/lib/utils";
 import { useFetchBasketQuery } from "../../../features/basket/basketApi";
 import { BasketItem } from "../../models/basket";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const OrderSummary: React.FC = () => {
+  const location = useLocation();
   const { data: basket } = useFetchBasketQuery();
   const subtotal =
     basket?.items.reduce(
@@ -63,16 +64,18 @@ const OrderSummary: React.FC = () => {
           </Box>
 
           <Box mt={2}>
-            <Button
-              component={Link}
-              to="/checkout"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mb: 1 }}
-            >
-              Checkout
-            </Button>
+            {!location.pathname.includes("checkout") && (
+              <Button
+                component={Link}
+                to="/checkout"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ mb: 1 }}
+              >
+                Checkout
+              </Button>
+            )}
             <Button component={Link} to="/catalogue" fullWidth>
               Continue Shopping
             </Button>
