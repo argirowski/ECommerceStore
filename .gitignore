@@ -1,6 +1,7 @@
 # Backend
 API/bin/
 API/obj/
+API/appsettings.json
 API/appsettings.Development.json
 
 # Frontend
