@@ -56,12 +56,14 @@ export default function FadeMenu({ user }: UserMenuProps) {
           </ListItemIcon>
           <ListItemText>My Orders</ListItemText>
         </MenuItem>
-        <MenuItem component={Link} to="/inventory">
-          <ListItemIcon>
-            <Inventory />
-          </ListItemIcon>
-          <ListItemText>Inventory</ListItemText>
-        </MenuItem>
+        {user.roles.includes("Admin") && (
+          <MenuItem component={Link} to="/inventory">
+            <ListItemIcon>
+              <Inventory />
+            </ListItemIcon>
+            <ListItemText>Inventory</ListItemText>
+          </MenuItem>
+        )}
         <Divider />
         <MenuItem onClick={logout}>
           <ListItemIcon>
